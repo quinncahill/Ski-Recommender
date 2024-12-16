@@ -43,6 +43,7 @@ def get_weather_data(lat, lon):
     return None
 
 
+#
 # Example coordinates for Wachusett Mountain
 lat = 42.4889793
 lon = -71.8870186
