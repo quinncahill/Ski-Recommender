@@ -47,11 +47,41 @@ def get_weather_data(lat, lon):
 # Example coordinates for Wachusett Mountain
 lat = 42.4889793
 lon = -71.8870186
-weather = get_weather_data(lat, lon)
-for period in weather:
-    print(f"{period['name']}: {period['temperature']}°F, {period['shortForecast']}")
+#weather = get_weather_data(lat, lon)
+
+#Data in the form of:
+#number, name, starttime, endtime, isDaytime, tempeerature, temperatureUnit, temperatureTrend,
+# probabilityOfPrecipitation, windSpeed, windDirection, icon (some url idk if it is useful),
+# short forecast, detailed forecast
+
+#significantly easier to use number than name because the name of the current changes throughout the day, although after current day
+#it does day night day night. numbers are just much more consistent.
+
+#probably the most useful data would be precipitation and temperature
+#print(weather)
+#for period in weather:
+    #print(f"{period['number']}")
+    #print(f"Wachusett Mountain Weather")
+    #print(f"{period['name']}: {period['temperature']}°F, {period['shortForecast']}")
 
 
 #example of a bigger print statement w/ more values:
 #print(f"{period['name']} - Temp: {period['temperature']}°F, {period['shortForecast']}, "
 #      f"Wind: {period['windSpeed']} from {period['windDirection']}, Precipitation: {period['precipitationAmount']} inches.")
+
+
+
+for resort in ski_resorts:
+    resort["weather"] = get_weather_data(resort["latitude"], resort["longitude"])
+    #print(resort)
+
+def addPrecipitationScore(resort):
+    weather = resort['weather']
+    #print(weather)
+    periodOne = weather[1]
+    print(periodOne)
+    precipitation = periodOne['probabilityOfPrecipitation']
+    print(precipitation)
+
+for resort in ski_resorts:
+    addPrecipitationScore(resort)
