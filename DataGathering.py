@@ -75,13 +75,24 @@ for resort in ski_resorts:
     resort["weather"] = get_weather_data(resort["latitude"], resort["longitude"])
     #print(resort)
 
+#this method could be used to give some sort of score/value to the predicted snowfall. right now it just gets the probability
+#from the nws data. this could be configured to loop through all the time periods or take in a time period
+
+#just read your text, yea I agree, would probably use some sort of combination between temp, wind, and precipitation
+
 def addPrecipitationScore(resort):
     weather = resort['weather']
     #print(weather)
     periodOne = weather[1]
-    print(periodOne)
+    #print(periodOne)
     precipitation = periodOne['probabilityOfPrecipitation']
-    print(precipitation)
+    #print(precipitation)
+    precipitationPercent = precipitation['value']
+    print(precipitationPercent)
+    #output is either an int or string 'none'
+    #could
 
 for resort in ski_resorts:
     addPrecipitationScore(resort)
+
+print(ski_resorts)
