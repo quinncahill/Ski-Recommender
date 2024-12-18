@@ -88,8 +88,8 @@ def getPrecipitationPercent(resort):
     precipitation = periodOne['probabilityOfPrecipitation']
     #print(precipitation)
     precipitationPercent = precipitation['value']
-    print (precipitationPercent)
-    print ("Chance of Precipitation")
+    #print (precipitationPercent)
+    #print ("Chance of Precipitation")
     return precipitationPercent
     #print(precipitationPercent)
     #output is either an int or string 'none'
@@ -100,8 +100,8 @@ def getWindSpeed(resort):
     windSpeed = periodOne['windSpeed']
     maxSpeed = windSpeed.split()[2]
     #print (windSpeed)
-    print(maxSpeed)
-    print("MPH")
+    #print(maxSpeed)
+    #print("MPH")
     return maxSpeed
 
 def getTemperature(resort):
@@ -109,12 +109,15 @@ def getTemperature(resort):
     periodOne = weather[1]
     temperature = periodOne['temperature']
     #print(periodOne)
-    print(temperature)
-    print ("F")
+    #print(temperature)
+    #print ("F")
     return temperature
 
 
 def computeWeatherScore(precipitationChance, temp, wind):
+    precipitationChance = int(precipitationChance)
+    temp = int(temp)
+    wind = int(wind)
     if temp < 30:
         return ((1 - precipitationChance) + temp + (wind * 1.25)) * .8
     elif temp < 60:
@@ -130,14 +133,17 @@ def addScoreToResorts(resort):
     windSpeed = getWindSpeed(resort)
     temperature = getTemperature(resort)
     score = computeWeatherScore(precipitation, temperature, windSpeed)
-    print(score)
+    #print(score)
     resort["score"] = score
 
 
 
 for resort in ski_resorts:
-    #getWindSpeed(resort)
-    #getPrecipitationPercent(resort)
-    #getTemperature(resort)
-    print(resort["name"])
-    #addScoreToResorts(resort)
+    #print(resort["name"])
+    addScoreToResorts(resort)
+    #print(resort["score"])
+
+def get_ski_resorts_with_scores():
+    for resort in ski_resorts:
+        addScoreToResorts(resort)
+    return ski_resorts

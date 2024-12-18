@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/styles/main.css">
+    <title>Resort Scores</title>
+</head>
+<body>
+    <header>
+        <h1>Ski Resorts</h1>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/resorts">Resorts</a>
+        </nav>
+    </header>
+    <main>
+        <table>
+            <thead>
+                <tr>
+                    <th>Resort Name</th>
+                    <th>State</th>
+                    <th>Elevation (ft)</th>
+                    <th>Weather Score</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for resort in resorts %}
+                <tr>
+                    <td>{{ resort.name }}</td>
+                    <td>{{ resort.state }}</td>
+                    <td>{{ resort.elevation_ft }}</td>
+                    <td>{{ resort.score }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </main>
+    <footer>
+        <p>&copy; 2024 Ski Resort Weather</p>
+    </footer>
+</body>
+</html>
