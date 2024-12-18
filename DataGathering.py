@@ -80,7 +80,7 @@ for resort in ski_resorts:
 
 #just read your text, yea I agree, would probably use some sort of combination between temp, wind, and precipitation
 
-def addPrecipitationScore(resort):
+def getPrecipitationPercent(resort):
     weather = resort['weather']
     #print(weather)
     periodOne = weather[1]
@@ -88,11 +88,56 @@ def addPrecipitationScore(resort):
     precipitation = periodOne['probabilityOfPrecipitation']
     #print(precipitation)
     precipitationPercent = precipitation['value']
-    print(precipitationPercent)
+    print (precipitationPercent)
+    print ("Chance of Precipitation")
+    return precipitationPercent
+    #print(precipitationPercent)
     #output is either an int or string 'none'
-    #could
+
+def getWindSpeed(resort):
+    weather = resort['weather']
+    periodOne = weather[1]
+    windSpeed = periodOne['windSpeed']
+    maxSpeed = windSpeed.split()[2]
+    #print (windSpeed)
+    print(maxSpeed)
+    print("MPH")
+    return maxSpeed
+
+def getTemperature(resort):
+    weather = resort['weather']
+    periodOne = weather[1]
+    temperature = periodOne['temperature']
+    #print(periodOne)
+    print(temperature)
+    print ("F")
+    return temperature
+
+
+def computeWeatherScore(precipitationChance, temp, wind):
+    if temp < 30:
+        return ((1 - precipitationChance) + temp + (wind * 1.25)) * .8
+    elif temp < 60:
+
+
+        return (1 - precipitationChance) + temp + (1.25 * wind)
+    else:
+        return 100
+
+#this method doesn't fully work because the data is NoneType. Unsure how to convert this to ints since it prints as ints
+def addScoreToResorts(resort):
+    precipitation = getPrecipitationPercent(resort)
+    windSpeed = getWindSpeed(resort)
+    temperature = getTemperature(resort)
+    score = computeWeatherScore(precipitation, temperature, windSpeed)
+    print(score)
+    resort["score"] = score
+
+
 
 for resort in ski_resorts:
-    addPrecipitationScore(resort)
-
-print(ski_resorts)
+    #getWindSpeed(resort)
+    #getPrecipitationPercent(resort)
+    #getTemperature(resort)
+    print(resort["name"])
+    #addScoreToResorts(resort)
