@@ -137,6 +137,7 @@ def addScoreToResorts(resort):
     temperature = getTemperature(resort)
     print(precipitation)
     score = computeWeatherScore(precipitation, temperature, windSpeed)
+    score = round(score, 2)
     #print(score)
     resort["score"] = score
 
