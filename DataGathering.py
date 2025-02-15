@@ -1,4 +1,5 @@
 import requests
+import re
 
 #this part is just creating data to use. the whole database thing didn't make much sense especially because
 #at least at the start the scale will be really small. i decided to start w/ just five mountains bc its enough
@@ -21,6 +22,7 @@ ski_resorts = [
      "elevation_ft": 3140},
     {"name": "Tenney Mountain", "latitude": 43.7378, "longitude": -71.7910, "state": "New Hampshire",
      "elevation_ft": 2149}
+
 ]
 
 
@@ -39,8 +41,11 @@ def get_weather_data(lat, lon):
         if forecast_response.status_code == 200:
             forecast_data = forecast_response.json()
             #properties is a dictionary in the json
+
             return forecast_data['properties']['periods']
+
     return None
+
 
 
 #
@@ -80,35 +85,38 @@ for resort in ski_resorts:
 
 #just read your text, yea I agree, would probably use some sort of combination between temp, wind, and precipitation
 
-def getPrecipitationPercent(resort):
+def getPrecipitationPercent(resort, num):
     weather = resort['weather']
-    print(weather)
-    periodOne = weather[1]
-    print(periodOne)
+    #print(weather)
+    periodOne = weather[num]
+    #print(periodOne)
     precipitation = periodOne['probabilityOfPrecipitation']
-    print(precipitation)
+    #print(precipitation)
     precipitationPercent = precipitation['value']
-    print (precipitationPercent)
-    print ("Chance of Precipitation")
+    #print (precipitationPercent)
+    #print ("Chance of Precipitation")
     if precipitationPercent == None:
         precipitationPercent = 0
     return precipitationPercent
-    print(precipitationPercent)
+    #print(precipitationPercent)
     #output is either an int or string 'none'
 
-def getWindSpeed(resort):
+def getWindSpeed(resort, num):
     weather = resort['weather']
-    periodOne = weather[1]
+    periodOne = weather[num]
     windSpeed = periodOne['windSpeed']
-    maxSpeed = windSpeed.split()[2]
+    #print(windSpeed)
+    maxSpeed = re.search(r'\d+', windSpeed).group()
+    #maxSpeed = windSpeed.split()[2]
     #print (windSpeed)
     #print(maxSpeed)
     #print("MPH")
     return maxSpeed
 
-def getTemperature(resort):
+def getTemperature(resort, num):
     weather = resort['weather']
-    periodOne = weather[1]
+    print(weather)
+    periodOne = weather[num]
     temperature = periodOne['temperature']
     #print(periodOne)
     #print(temperature)
@@ -117,38 +125,45 @@ def getTemperature(resort):
 
 
 def computeWeatherScore(precipitationChance, temp, wind):
-    print(precipitationChance)
+    #print(precipitationChance)
     precipitationChance = int(precipitationChance)
+    print(precipitationChance)
     temp = int(temp)
     wind = int(wind)
     if temp < 30:
-        return ((1 - precipitationChance) + temp + (wind * 1.25)) * .8
+        return precipitationChance - temp - (wind*1.25)
+        #return (100 - precipitationChance) + temp + (wind * 1.25)
     elif temp < 60:
-
-
-        return (1 - precipitationChance) + temp + (1.25 * wind)
+        return (.5 * precipitationChance) - temp - (wind*1.25)
+        #return (1.25 * (100 - precipitationChance)) + temp + (1.25 * wind)
     else:
         return 100
 
 #this method doesn't fully work because the data is NoneType. Unsure how to convert this to ints since it prints as ints
-def addScoreToResorts(resort):
-    precipitation = getPrecipitationPercent(resort)
-    windSpeed = getWindSpeed(resort)
-    temperature = getTemperature(resort)
-    print(precipitation)
+def addScoreToResorts(resort, num):
+    precipitation = getPrecipitationPercent(resort, num)
+    windSpeed = getWindSpeed(resort, num)
+    temperature = getTemperature(resort, num)
+    #print(precipitation)
     score = computeWeatherScore(precipitation, temperature, windSpeed)
     score = round(score, 2)
     #print(score)
-    resort["score"] = score
+    resort[f"score_{num}"] = score
+    #resort["score"] = score
 
 
 
 for resort in ski_resorts:
     #print(resort["name"])
-    addScoreToResorts(resort)
+    addScoreToResorts(resort, 1)
+    addScoreToResorts(resort, 2)
     #print(resort["score"])
 
-def get_ski_resorts_with_scores():
+    #print("NONE")
+
+def get_ski_resorts_with_scores(weatherNum):
     for resort in ski_resorts:
-        addScoreToResorts(resort)
+        addScoreToResorts(resort, weatherNum)
+    #print(ski_resorts)
     return ski_resorts
+
